@@ -1,0 +1,31 @@
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/mybatis-plus?characterEncoding=utf-8&useOldAliasMetadataBehavior=true&useSSL=false
+#    username: ENC(Qc3CkmT/k1zJmWihcrP2fg==)
+#    password: ENC(Qv0RN4wqA2DOqYHMPET09A==)
+
+#spring
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://106.55.13.2/square-cape?characterEncoding=utf-8&useOldAliasMetadataBehavior=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: QWE123@#$
+    druid:
+      initial-size: 10
+      min-idle: 20
+      max-active: 200
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logback:
+  logDir: log/dev
+
+logging:
+  level:
+    com.fengwenyi.mp3demo.service.impl: trace
+    com.fengwenyi.mp3demo..controller: trace

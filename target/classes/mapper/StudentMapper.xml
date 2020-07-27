@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fengwenyi.mp3demo.dao.StudentDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fengwenyi.mp3demo.model.Student">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <result column="info" property="info"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="gender" property="gender"/>
+        <result column="idcard_id" property="idcardId"/>
+        <result column="city_id" property="cityId"/>
+    </resultMap>
+
+    <!--List<Student> selectAll();-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *
+        from t_student
+    </select>
+
+    <select id="selectStudent" resultType="com.fengwenyi.mp3demo.dto.LoginLog">
+        select *
+        from login_log
+        where userid >= 100
+    </select>
+
+    <insert id="insertStudent" parameterType="com.fengwenyi.mp3demo.dto.LoginLog">
+        INSERT INTO `login_log`
+        (
+        userid,
+        login_ip,
+        login_html
+        )
+        VALUES
+        (
+        #{userid},
+        #{loginIp},
+        #{loginHtml}
+        )
+    </insert>
+
+    <insert id="batchInsertStudent" parameterType="java.util.List">
+        INSERT INTO `t_student`
+        (
+        id,
+        name,
+        age,
+        info,
+        create_time,
+        update_time,
+        gender,
+        idcard_id,
+        city_id
+        )
+        VALUES
+        <foreach collection="list" item="stud" index="index" separator=",">
+            (
+            #{stud.id},
+            #{stud.name},
+            #{stud.age},
+            #{stud.info},
+            #{stud.createTime},
+            #{stud.createTime},
+            #{stud.gender},
+            #{stud.idcardId},
+            #{stud.cityId}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="batchUpdateRouteByMailNo" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator="">
+            UPDATE
+            us_order
+            SET
+            <if test="item.orderStatus != null">
+                order_status = #{item.orderStatus},
+            </if>
+            <if test="item.trackingOrderStatus != null">
+                tracking_order_status = #{item.trackingOrderStatus},
+            </if>
+            <if test="item.trackingAbnormalReason != null">
+                tracking_abnormal_reason = #{item.trackingAbnormalReason},
+            </if>
+            <if test="item.status != null">
+                status = #{item.status},
+            </if>
+            <if test="item.abnormalReason != null">
+                abnormal_reason =  #{item.abnormalReason},
+            </if>
+            update_time = CURRENT_TIMESTAMP
+            <where>
+                <choose>
+                    <when test="item.orderStatus != null ">
+                        main_mail_no = #{item.mainMailNo} AND (order_status &lt; #{item.orderStatus} or order_status = 6 )
+                    </when>
+                    <when test="item.trackingOrderStatus != null ">
+                        tracking_no = #{item.mainMailNo}
+                    </when>
+                    <otherwise>
+                        <!--如果出现上两个都为null；就赋一不存在的值-->
+                        tracking_no='12345678';
+                    </otherwise>
+                </choose>
+            </where>
+            ;
+        </foreach>
+    </update>
+
+</mapper>
